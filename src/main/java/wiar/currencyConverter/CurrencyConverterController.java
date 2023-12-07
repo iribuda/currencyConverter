@@ -1,19 +1,25 @@
 package wiar.currencyConverter;
 
+import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import wiar.currencyConverter.logic.Currency;
 import wiar.currencyConverter.logic.CurrencyConverter;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Steuert die Währungsumrechnung im JavaFX-Benutzeroberflächenkontext.
  */
 public class CurrencyConverterController {
+    public Label labelAmount;
+    public Label labelFrom;
+    public Label labelTo;
+    public Button btnConvert;
+    public Label labelLanguage;
     // Textfeld für die Eingabe des Betrags
     @FXML
     private TextField amountInput;
@@ -23,6 +29,17 @@ public class CurrencyConverterController {
     // Dropdown-Liste für die Auswahl der Zielwährung
     @FXML
     private ComboBox<Currency> toCurrencyDropdown;
+    @FXML
+    private ComboBox<Locale> localeDropDown;
+    private final ArrayList<Locale> locales = new ArrayList<>();
+    private ResourceBundle resourceBundle;
+    private CurrencyConverterApplication app;
+
+    public CurrencyConverterController(){
+        locales.add(new Locale("ru"));
+        locales.add(Locale.GERMAN);
+        locales.add(Locale.ENGLISH);
+    }
 
     public void initialize(){
         fromCurrencyDropdown.getItems().addAll(Currency.EUR, Currency.USD, Currency.KGS);
@@ -30,6 +47,18 @@ public class CurrencyConverterController {
 
         toCurrencyDropdown.getItems().addAll(Currency.EUR, Currency.USD, Currency.KGS);
         toCurrencyDropdown.setValue(Currency.EUR);
+
+        localeDropDown.getItems().addAll(locales);
+        localeDropDown.setValue(locales.get(2));
+        //setResourceBundle(locales.get(0));
+    }
+
+    private void updateText(){
+        labelAmount.setText(resourceBundle.getString("label.amount"));
+        labelFrom.setText(resourceBundle.getString("label.from"));
+        labelTo.setText(resourceBundle.getString("label.to"));
+        labelLanguage.setText(resourceBundle.getString("label.language"));
+        btnConvert.setText(resourceBundle.getString("button.convert"));
     }
 
     /**
@@ -49,17 +78,25 @@ public class CurrencyConverterController {
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
             result = currencyFormatter.format(amount) + " " + fromCurrency.getName() + " равно " + result + " " + toCurrency.getName();
 
-            // Zeigt das Ergebnis in einem Informationsdialog an
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Результат");
-            alert.setHeaderText(null);
-            alert.setContentText(result);
-            alert.showAndWait();
+
+            displayResult(result);
         } catch (NumberFormatException ex) {
-            showError("Неверное значение. Введите число!");
+            showError(resourceBundle.getString("error.wrong"));
         } catch (Exception ex) {
-            showError("Возникла ошибка.");
+            showError(resourceBundle.getString("error.convert"));
         }
+    }
+
+    // Zeigt das Ergebnis in einem Informationsdialog an
+    private void displayResult(String result) {
+        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
+        String formattedResult = currencyFormatter.format(Double.parseDouble(result));
+
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(resourceBundle.getString("result.title"));
+        alert.setHeaderText(null);
+        alert.setContentText(formattedResult);
+        alert.showAndWait();
     }
 
     /**
@@ -69,9 +106,25 @@ public class CurrencyConverterController {
      */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ошибка");
+        alert.setTitle(resourceBundle.getString("error"));
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+
+    @FXML
+    public void changeLocale() {
+        Locale selectedLocale = localeDropDown.getValue();
+        app.changeLocale(selectedLocale);
+        resourceBundle = ResourceBundle.getBundle("resources", selectedLocale);
+        updateText();
+    }
+
+    public void setResourceBundle(ResourceBundle bundle){
+        resourceBundle = bundle;
+    }
+
+    public void setApp(CurrencyConverterApplication app) {
+        this.app = app;
     }
 }
