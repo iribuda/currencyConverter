@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import wiar.currencyConverter.logic.Currency;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -43,8 +44,8 @@ public class CurrencyConverterApplication extends Application {
     }
 
     // Method to change the locale dynamically
-    public void changeLocale(Locale newLocale) {
-        bundle = ResourceBundle.getBundle("resources", newLocale);
+    public void changeLocale() {
+        bundle = ResourceBundle.getBundle("resources", Locale.getDefault());
         primaryStage.setTitle(bundle.getString("title.app"));
     }
 }

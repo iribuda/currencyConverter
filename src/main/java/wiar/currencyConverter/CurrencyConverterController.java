@@ -6,6 +6,7 @@ import javafx.scene.control.*;
 import wiar.currencyConverter.logic.Currency;
 import wiar.currencyConverter.logic.CurrencyConverter;
 
+import java.text.MessageFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -34,11 +35,12 @@ public class CurrencyConverterController {
     private final ArrayList<Locale> locales = new ArrayList<>();
     private ResourceBundle resourceBundle;
     private CurrencyConverterApplication app;
+    Locale defaultLocale;
 
     public CurrencyConverterController(){
         locales.add(new Locale("ru"));
-        locales.add(Locale.GERMAN);
-        locales.add(Locale.ENGLISH);
+        locales.add(Locale.GERMANY);
+        locales.add(Locale.US);
     }
 
     public void initialize(){
@@ -73,29 +75,27 @@ public class CurrencyConverterController {
 
             CurrencyConverter currencyConverter = new CurrencyConverter();
             // Führt die Währungsumrechnung durch und formatiert das Ergebnis
-            String result = String.format("%.2f", currencyConverter.convert(amount, fromCurrency, toCurrency));
-
-            NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-            result = currencyFormatter.format(amount) + " " + fromCurrency.getName() + " равно " + result + " " + toCurrency.getName();
-
-
-            displayResult(result);
+            double result = currencyConverter.convert(amount, fromCurrency, toCurrency);
+            NumberFormat numberFormatter = NumberFormat.getNumberInstance(resourceBundle.getLocale());
+            String fromCurrencyText = MessageFormat.format(fromCurrency.formatAmountForResult(amount), numberFormatter.format(amount));
+            String toCurrencyText = MessageFormat.format(toCurrency.formatAmount(result), numberFormatter.format(result));
+            String formattedText = fromCurrencyText + toCurrencyText;
+            displayResult(formattedText);
         } catch (NumberFormatException ex) {
             showError(resourceBundle.getString("error.wrong"));
+            System.out.println(ex.getMessage());
         } catch (Exception ex) {
+            System.out.println(ex.getMessage());
             showError(resourceBundle.getString("error.convert"));
         }
     }
 
     // Zeigt das Ergebnis in einem Informationsdialog an
     private void displayResult(String result) {
-        NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-        String formattedResult = currencyFormatter.format(Double.parseDouble(result));
-
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(resourceBundle.getString("result.title"));
+        alert.setTitle(resourceBundle.getString("title.result"));
         alert.setHeaderText(null);
-        alert.setContentText(formattedResult);
+        alert.setContentText(result);
         alert.showAndWait();
     }
 
@@ -115,8 +115,9 @@ public class CurrencyConverterController {
     @FXML
     public void changeLocale() {
         Locale selectedLocale = localeDropDown.getValue();
-        app.changeLocale(selectedLocale);
-        resourceBundle = ResourceBundle.getBundle("resources", selectedLocale);
+        Locale.setDefault(selectedLocale);
+        resourceBundle = ResourceBundle.getBundle("resources", Locale.getDefault());
+        app.changeLocale();
         updateText();
     }
 

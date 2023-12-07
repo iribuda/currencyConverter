@@ -1,33 +1,39 @@
 package wiar.currencyConverter.logic;
 
+import java.text.ChoiceFormat;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 /**
  * Die Aufzählung für die Währung.
  */
 public enum Currency {
-    KGS("KGS", "Сом"),
-    USD("USD", "Доллар"),
-    EUR("EUR", "Евро");
-
-    /**
-     * Name der Währung auf russische Sprache
-     */
-    private final String name;
+    KGS("KGS"),
+    USD("USD"),
+    EUR("EUR");
 
     /**
      * Code der Währung nach dem ISO-Standard
      */
     private final String ISOcode;
 
-    Currency(String ISOcode, String name){
+    Currency(String ISOcode){
         this.ISOcode = ISOcode;
-        this.name = name;
     }
 
     public String getISOcode() {
         return ISOcode;
     }
 
-    public String getName(){
-        return name;
+
+    public String formatAmount(double amount) {
+        ResourceBundle bundle = ResourceBundle.getBundle("resources", Locale.getDefault());
+        return MessageFormat.format(bundle.getString("currency."+getISOcode()), amount, amount);
+    }
+
+    public String formatAmountForResult(double amount){
+        ResourceBundle bundle = ResourceBundle.getBundle("resources", Locale.getDefault());
+        return MessageFormat.format(bundle.getString("currency.result."+getISOcode()), amount, amount);
     }
 }
