@@ -4,12 +4,12 @@ package wiar.currencyConverter.logic;
  * Die Aufzählung für die Währung.
  */
 public enum Currency {
-    KGS("KGS", "Сом"),
-    USD("USD", "Доллар"),
-    EUR("EUR", "Евро");
+    KGS("KGS", "Som"),
+    USD("USD", "Dollar"),
+    EUR("EUR", "Euro");
 
     /**
-     * Name der Währung auf russische Sprache
+     * Name der Währung auf englische Sprache
      */
     private final String name;
 

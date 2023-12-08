@@ -47,18 +47,18 @@ public class CurrencyConverterController {
             String result = String.format("%.2f", currencyConverter.convert(amount, fromCurrency, toCurrency));
 
             NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(Locale.getDefault());
-            result = currencyFormatter.format(amount) + " " + fromCurrency.getName() + " равно " + result + " " + toCurrency.getName();
+            result = currencyFormatter.format(amount) + " " + fromCurrency.getName() + " equal " + result + " " + toCurrency.getName();
 
             // Zeigt das Ergebnis in einem Informationsdialog an
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Результат");
+            alert.setTitle("Result");
             alert.setHeaderText(null);
             alert.setContentText(result);
             alert.showAndWait();
         } catch (NumberFormatException ex) {
-            showError("Неверное значение. Введите число!");
+            showError("Wrong input. Enter the number!");
         } catch (Exception ex) {
-            showError("Возникла ошибка.");
+            showError("There is an error.");
         }
     }
 
@@ -69,7 +69,7 @@ public class CurrencyConverterController {
      */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Ошибка");
+        alert.setTitle("Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
