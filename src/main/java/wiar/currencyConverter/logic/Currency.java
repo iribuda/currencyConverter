@@ -26,7 +26,15 @@ public enum Currency {
         return ISOcode;
     }
 
-
+    /**
+     * Die Methode formatiert den angegebenen Betrag gemäß der lokalen Währungseinstellung.
+     * Sie verwendet das Ressourcenbündel, um das entsprechende Formatierungsmuster abzurufen
+     * und den Betrag zu formatieren.
+     *
+     * @param key Der Schlüssel, der auf das Formatierungsmuster im Ressourcenbündel zeigt.
+     * @param amount Der zu formatierende Betrag.
+     * @return Ein formatierter String, der den Betrag gemäß der lokalen Währungseinstellung darstellt.
+     */
     public String formatAmount(String key, double amount) {
         ResourceBundle bundle = ResourceBundle.getBundle("resources", Locale.getDefault());
         return MessageFormat.format(bundle.getString(key+getISOcode()), amount);

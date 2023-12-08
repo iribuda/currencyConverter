@@ -37,11 +37,23 @@ public class CurrencyConverterController {
     private ComboBox<Currency> toCurrencyDropdown;
     @FXML
     private ComboBox<Locale> localeDropDown;
+    /**
+     * Dieses Feld wird initialisiert und aktualisiert, um auf die Ressourcenbündel zuzugreifen,
+     * die für die unterstützten Sprachen benötigt werden.
+     */
     private ResourceBundle resourceBundle;
+
+    /**
+     * Diese Instanz wird verwendet, um auf Application-Klasse zuzugreifen.
+     */
     private CurrencyConverterApplication app;
     public CurrencyConverterController(){
     }
 
+    /**
+     * Die Methode wird verwendet, um die Anfangszustände der Benutzeroberfläche festzulegen,
+     * einschließlich der vorausgewählten Werte für Dropdown-Menüs und der verfügbaren Lokalisierungen.
+     */
     public void initialize(){
         fromCurrencyDropdown.getItems().addAll(Currency.EUR, Currency.USD, Currency.KGS);
         fromCurrencyDropdown.setValue(Currency.USD);
@@ -59,6 +71,9 @@ public class CurrencyConverterController {
         //setResourceBundle(locales.get(0));
     }
 
+    /**
+     * Diese Methode aktualisiert die Texte in der Benutzeroberfläche basierend auf den aktuellen Locale.
+     */
     private void updateText(){
         labelAmount.setText(resourceBundle.getString("label.amount"));
         labelFrom.setText(resourceBundle.getString("label.from"));
@@ -78,11 +93,17 @@ public class CurrencyConverterController {
             Currency toCurrency = toCurrencyDropdown.getValue();
 
             CurrencyConverter currencyConverter = new CurrencyConverter();
-            // Führt die Währungsumrechnung durch und formatiert das Ergebnis
             double amountResult = currencyConverter.convert(amount, fromCurrency, toCurrency);
+
             NumberFormat numberFormatter = NumberFormat.getNumberInstance(resourceBundle.getLocale());
+
+            // Den formatierten Text für die eingegebene Betrag erstellen
             String fromCurrencyText = MessageFormat.format(fromCurrency.formatAmount("currency.result.", amount), numberFormatter.format(amount));
+
+            // Den formatierten Text für den Ergebnisbeitrag erstellen
             String toCurrencyText = MessageFormat.format(toCurrency.formatAmount("currency.", amountResult), numberFormatter.format(amountResult));
+
+            // Den Gesamttext für die Benutzeroberfläche erstellen und anzeigen
             String formattedText = fromCurrencyText + toCurrencyText;
             displayResult(formattedText);
         } catch (NumberFormatException ex) {
@@ -94,7 +115,9 @@ public class CurrencyConverterController {
         }
     }
 
-    // Zeigt das Ergebnis in einem Informationsdialog an
+    /**
+     * Zeigt das Ergebnis in einem Informationsdialog an.
+     */
     private void displayResult(String result) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(resourceBundle.getString("title.result"));
@@ -116,6 +139,9 @@ public class CurrencyConverterController {
         alert.showAndWait();
     }
 
+    /**
+     * Die Methode wird aufgerufen, wenn der Benutzer die Locale ändert.
+     */
     @FXML
     public void changeLocale() {
         Locale selectedLocale = localeDropDown.getValue();
