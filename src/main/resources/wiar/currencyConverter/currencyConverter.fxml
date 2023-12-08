@@ -28,7 +28,7 @@
    <bottom>
       <HBox prefHeight="36.0" prefWidth="300.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnConvert" mnemonicParsing="false" onAction="#handleConversion" prefHeight="25.0" prefWidth="90.0" text="%title.convert">
+            <Button fx:id="btnConvert" mnemonicParsing="false" onAction="#handleConversion" prefHeight="25.0" prefWidth="90.0" text="%button.convert">
                <HBox.margin>
                   <Insets left="105.0" right="105.0" />
                </HBox.margin></Button>
