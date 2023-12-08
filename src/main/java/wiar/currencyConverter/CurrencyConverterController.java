@@ -51,8 +51,8 @@ public class CurrencyConverterController {
 
         ArrayList<Locale> locales = new ArrayList<>();
         locales.add(new Locale("ru"));
-        locales.add(Locale.GERMANY);
-        locales.add(Locale.US);
+        locales.add(Locale.GERMAN);
+        locales.add(Locale.ENGLISH);
 
         localeDropDown.getItems().addAll(locales);
         localeDropDown.setValue(locales.get(2));
