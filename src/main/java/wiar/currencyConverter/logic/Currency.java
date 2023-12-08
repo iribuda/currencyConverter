@@ -27,13 +27,8 @@ public enum Currency {
     }
 
 
-    public String formatAmount(double amount) {
+    public String formatAmount(String key, double amount) {
         ResourceBundle bundle = ResourceBundle.getBundle("resources", Locale.getDefault());
-        return MessageFormat.format(bundle.getString("currency."+getISOcode()), amount, amount);
-    }
-
-    public String formatAmountForResult(double amount){
-        ResourceBundle bundle = ResourceBundle.getBundle("resources", Locale.getDefault());
-        return MessageFormat.format(bundle.getString("currency.result."+getISOcode()), amount, amount);
+        return MessageFormat.format(bundle.getString(key+getISOcode()), amount);
     }
 }

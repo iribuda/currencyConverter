@@ -16,11 +16,16 @@ import java.util.ResourceBundle;
  * Steuert die Währungsumrechnung im JavaFX-Benutzeroberflächenkontext.
  */
 public class CurrencyConverterController {
-    public Label labelAmount;
-    public Label labelFrom;
-    public Label labelTo;
-    public Button btnConvert;
-    public Label labelLanguage;
+    @FXML
+    private Label labelAmount;
+    @FXML
+    private Label labelFrom;
+    @FXML
+    private Label labelTo;
+    @FXML
+    private Button btnConvert;
+    @FXML
+    private Label labelLanguage;
     // Textfeld für die Eingabe des Betrags
     @FXML
     private TextField amountInput;
@@ -32,15 +37,9 @@ public class CurrencyConverterController {
     private ComboBox<Currency> toCurrencyDropdown;
     @FXML
     private ComboBox<Locale> localeDropDown;
-    private final ArrayList<Locale> locales = new ArrayList<>();
     private ResourceBundle resourceBundle;
     private CurrencyConverterApplication app;
-    Locale defaultLocale;
-
     public CurrencyConverterController(){
-        locales.add(new Locale("ru"));
-        locales.add(Locale.GERMANY);
-        locales.add(Locale.US);
     }
 
     public void initialize(){
@@ -49,6 +48,11 @@ public class CurrencyConverterController {
 
         toCurrencyDropdown.getItems().addAll(Currency.EUR, Currency.USD, Currency.KGS);
         toCurrencyDropdown.setValue(Currency.EUR);
+
+        ArrayList<Locale> locales = new ArrayList<>();
+        locales.add(new Locale("ru"));
+        locales.add(Locale.GERMANY);
+        locales.add(Locale.US);
 
         localeDropDown.getItems().addAll(locales);
         localeDropDown.setValue(locales.get(2));
@@ -75,10 +79,10 @@ public class CurrencyConverterController {
 
             CurrencyConverter currencyConverter = new CurrencyConverter();
             // Führt die Währungsumrechnung durch und formatiert das Ergebnis
-            double result = currencyConverter.convert(amount, fromCurrency, toCurrency);
+            double amountResult = currencyConverter.convert(amount, fromCurrency, toCurrency);
             NumberFormat numberFormatter = NumberFormat.getNumberInstance(resourceBundle.getLocale());
-            String fromCurrencyText = MessageFormat.format(fromCurrency.formatAmountForResult(amount), numberFormatter.format(amount));
-            String toCurrencyText = MessageFormat.format(toCurrency.formatAmount(result), numberFormatter.format(result));
+            String fromCurrencyText = MessageFormat.format(fromCurrency.formatAmount("currency.result.", amount), numberFormatter.format(amount));
+            String toCurrencyText = MessageFormat.format(toCurrency.formatAmount("currency.", amountResult), numberFormatter.format(amountResult));
             String formattedText = fromCurrencyText + toCurrencyText;
             displayResult(formattedText);
         } catch (NumberFormatException ex) {
